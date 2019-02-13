@@ -1,29 +1,38 @@
 const express = require('express')
+const bodyParser = require('body-parser')
 const app = express()
 const port = 3000
 
 app.use(express.static('public'))
+app.use(bodyParser.urlencoded({extended:true}))
+app.use(bodyParser.json())
 
-app.get('/page', getQuery);
-app.get('/page/:id', getQuery);
-app.get('/page/:id/:mode', getQuery);
+app.get('/book', getQuery);
+app.get('/book/:id', getQuery);
+app.get('/book/:id/:mode', getQuery);
 
 function getQuery(req,res) {
-    var id = req;
-    // var mode = req.query.mode;
+    var params = req.params;
     var pageTitles = ["MAIN","PAGE1","PAGE2","PAGE3"];
-    var html = `
-    <ul>
-    <li style="padding:1rem;list-style:none;float:left;width:20%;"><a href="/page?id=0">Main</a></li>
-    <li style="padding:1rem;list-style:none;float:left;width:20%;"><a href="/page?id=1">Page1</a></li>
-    <li style="padding:1rem;list-style:none;float:left;width:20%;"><a href="/page?id=2">Page2</a></li>
-    <li style="padding:1rem;list-style:none;float:left;width:20%;"><a href="/page?id=3">Page3</a></li>
-    <li style="clear:both;"></li>
-    </ul>
-    <div style="text-align:center">
-    <h1>${pageTitles[id]}</h1>
-    </div>`
-    res.send(html);
+    if(typeof params.id !== 'undefined') {
+        if(params.id == 'new') {
+            res.send('register new book');
+        } else {
+            var html = `
+            <ul>
+            <li style="padding:1rem;list-style:none;float:left;width:20%;"><a href="/page?id=0">Main</a></li>
+            <li style="padding:1rem;list-style:none;float:left;width:20%;"><a href="/page?id=1">Page1</a></li>
+            <li style="padding:1rem;list-style:none;float:left;width:20%;"><a href="/page?id=2">Page2</a></li>
+            <li style="padding:1rem;list-style:none;float:left;width:20%;"><a href="/page?id=3">Page3</a></li>
+            <li style="clear:both;"></li>
+            </ul>
+            <div style="text-align:center">
+            <h1>${pageTitles[params.id]}</h1>
+            <h2>${params.mode}</h2>
+            </div>`
+            res.send(html);
+        }
+    }
 }
 
 // app.get('/page', (req,res) => {
@@ -43,10 +52,6 @@ function getQuery(req,res) {
 //     res.send(html);
 // });
 
-app.get('/book/science', (req,res) => {
-    var html = `<h1>Science1</h1>`
-    res.send(html);
-});
 app.get('/info', (req,res) => {
     var now = new Date();
     var html = `<!DOCTYPE html>
