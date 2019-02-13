@@ -3,9 +3,13 @@ const bodyParser = require('body-parser')
 const app = express()
 const port = 3000
 
-app.use(express.static('public'))
+app.locals.pretty = true
+app.use('/',express.static('public'))
+app.use('/assets',express.static('assets'))
 app.use(bodyParser.urlencoded({extended:true}))
 app.use(bodyParser.json())
+app.set('view engine', 'pug')
+app.set('views', './views')
 
 app.get('/book', getQuery);
 app.get('/book/:id', getQuery);
@@ -16,7 +20,7 @@ function getQuery(req,res) {
     var pageTitles = ["MAIN","PAGE1","PAGE2","PAGE3"];
     if(typeof params.id !== 'undefined') {
         if(params.id == 'new') {
-            res.send('register new book');
+            res.render('wr', {title:"New Item"});
         } else {
             var html = `
             <ul>
