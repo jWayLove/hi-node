@@ -22,19 +22,28 @@ function getQuery(req,res) {
         if(params.id == 'new') {
             res.render('wr', {title:"New Item"});
         } else {
-            var html = `
-            <ul>
-            <li style="padding:1rem;list-style:none;float:left;width:20%;"><a href="/page?id=0">Main</a></li>
-            <li style="padding:1rem;list-style:none;float:left;width:20%;"><a href="/page?id=1">Page1</a></li>
-            <li style="padding:1rem;list-style:none;float:left;width:20%;"><a href="/page?id=2">Page2</a></li>
-            <li style="padding:1rem;list-style:none;float:left;width:20%;"><a href="/page?id=3">Page3</a></li>
-            <li style="clear:both;"></li>
-            </ul>
-            <div style="text-align:center">
-            <h1>${pageTitles[params.id]}</h1>
-            <h2>${params.mode}</h2>
-            </div>`
-            res.send(html);
+            res.render('nav', {
+                title: "Book list",
+                pages: [
+                    {id:0, title:"book1"},
+                    {id:1, title:"book2"},
+                    {id:2, title:"book3"},
+                    {id:3, title:"book4"}
+                ]
+            });
+            // var html = `
+            // <ul>
+            // <li style="padding:1rem;list-style:none;float:left;width:20%;"><a href="/page?id=0">Main</a></li>
+            // <li style="padding:1rem;list-style:none;float:left;width:20%;"><a href="/page?id=1">Page1</a></li>
+            // <li style="padding:1rem;list-style:none;float:left;width:20%;"><a href="/page?id=2">Page2</a></li>
+            // <li style="padding:1rem;list-style:none;float:left;width:20%;"><a href="/page?id=3">Page3</a></li>
+            // <li style="clear:both;"></li>
+            // </ul>
+            // <div style="text-align:center">
+            // <h1>${pageTitles[params.id]}</h1>
+            // <h2>${params.mode}</h2>
+            // </div>`
+            // res.send(html);
         }
     }
 }
