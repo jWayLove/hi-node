@@ -2,6 +2,10 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const fs = require('fs');
 const multer = require('multer')
+var db = require('./mysql_conn');
+var mysql = db.mysql;
+var conn = db.conn;
+
 const app = express()
 const port = 3000
 const storage = multer.diskStorage({
@@ -23,7 +27,7 @@ const storage = multer.diskStorage({
     }
   })
   
-var upload = multer({ storage: storage })
+var upload = multer({ storage, fileFilter })
 //var upload = multer({ dest: 'uploads/' })
 
 app.locals.pretty = true
@@ -60,6 +64,12 @@ function postQuery(req, res) {
             id
         })
         str = JSON.stringify(datas);
+        var sql = " INSERT INTO books SET title=?, content=?, id=? ";
+        var params = [title, content, id];
+        conn.query(sql, params, (err, rows, field) => {
+            if(err) console.log(err);
+            else console.log(rows);
+        });
         fs.writeFile('./data/book.json', str, (err) => {
             if(err) res.status(500).send("Internal Server Error")
             res.redirect('/book/'+id);
@@ -127,13 +137,16 @@ app.get('/info', (req,res) => {
     res.send(html);
 })
 
-//RESTful Routing
-//app.get('/', (req, res) => res.send('Hello World!'))
-// app.post('/', (req, res) => res.send('Hello World!'))
-// app.put('/', (req, res) => res.send('Hello World!'))
-// app.delete('/', (req, res) => res.send('Hello World!'))
-
-
-// app.get('/', (req, res) => res.redirect());
+// multer - file extension check
+function fileFilter (req, file, cb) {
+    var filename = file.originalname.split('.')
+    var ext = filename[filename.length-1]
+    var allowExt = "jpg|gif|png|jpeg"
+    if(allowExt.includes(ext)) cb(null, true)
+    else {
+        cb(null, false)
+        cb(new Error('I don\'t have a clue!'))
+    }
+  }
 
 app.listen(port, () => console.log(`http://localhost:${port}`))
