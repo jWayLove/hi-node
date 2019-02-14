@@ -1,10 +1,17 @@
-doctype html
-html
-    head
-        title= title
-        meta(charset="utf-8")
-        link(href="https://www.w3schools.com/w3css/4/w3.css" rel="stylesheet")
-        link(href="/assets/css/base.css" rel="stylesheet")
-        link(href="/assets/css/wr.css" rel="stylesheet")
-    body
-        h1 안녕하세요
+extends layout.pug
+
+block top
+    div
+
+block content
+    form(method="post" action="/book/create" enctype="multipart/form-data")
+        h3(class="w3-padding") Adding a new book
+            ul(class="w3-padding wr_form")
+                li(class="w3-padding")
+                    input(type="text" name="title" placeholder="Title" class="w3-input w3-border")
+                li(class="w3-padding")
+                    input(type="file" name="imgfile" class="w3-input w3-border")
+                li(class="w3-padding")
+                    textarea(name="content", placeholder="Details" class="w3-input w3-border")
+                li(class="w3-padding w3-center")
+                    button(type="submit" class="w3-button w3-red") Save
